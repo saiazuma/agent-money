@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "625245992942",
+    "project_id": "agent-money-92153",
+    "storage_bucket": "agent-money-92153.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625245992942:android:8f072839de6657d3eb00ff",
+        "android_client_info": {
+          "package_name": "com.example.agentmoney"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625245992942-mo0v61es0p4nnp60gtvqfmqod38spmra.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAH6EumymrTM4Cxfa-TFB8BuFmkJ9Vq5wM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625245992942-mo0v61es0p4nnp60gtvqfmqod38spmra.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
