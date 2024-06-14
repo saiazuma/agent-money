@@ -26,14 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/account_tv_deposit" />
 
-    <TextView
-        android:id="@+id/account_tv_money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="money"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/account_tv_infor" />
-
     <ListView
         android:id="@+id/list"
         android:layout_width="0dp"

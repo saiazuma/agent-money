@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 測試介面用
         Intent intent = new Intent();
         intent.setClass(MainActivity.this, AccountActivity.class);
         startActivity(intent);
