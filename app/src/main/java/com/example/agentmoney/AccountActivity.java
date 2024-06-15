@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +33,9 @@ public class AccountActivity extends AppCompatActivity {
     private EditText etMoney;
     private Button btnInput;
     private Button btnClean;
-    private EditText etType;
+    private Spinner spType;
     private ListView listv;
-
+    private String[] types = new String[] {"請選擇項目類型", "飲食", "交通", "娛樂", "繳費", "收入", "其他"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +48,11 @@ public class AccountActivity extends AppCompatActivity {
         etDate = findViewById(R.id.et_date);
         etMoney = findViewById(R.id.et_money);
         btnInput = findViewById(R.id.btn_input);
-        etType = findViewById(R.id.et_type);
+        spType = findViewById(R.id.sp_type);
         listv = findViewById(R.id.list);
         btnClean = findViewById(R.id.btn_clean);
+
+        listAllProducts();
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -54,19 +60,23 @@ public class AccountActivity extends AppCompatActivity {
                 if (v.getId() == R.id.btn_input) {
                     String inputDate = etDate.getText().toString();
                     String eachMoney = etMoney.getText().toString();
-                    String type = etType.getText().toString();
+                    String type = spType.getSelectedItem().toString();
+                    if (type.equals(types[0])) {
+                        Toast.makeText(AccountActivity.this, "未選擇項目類型", Toast.LENGTH_LONG).show();
+                    } else {
 
-                    String productName = etDate.getText().toString();
-                    int productPrice = Integer.parseInt(etMoney.getText().toString());
+                        String productName = etDate.getText().toString();
+                        int productPrice = Integer.parseInt(etMoney.getText().toString());
 
-                    String insertSql = "INSERT INTO " + TABLE_NAME + "(date, money) VALUES ('" + inputDate + "'," + eachMoney + " )";
-                    productDatabase.execSQL(insertSql);
+                        String insertSql = "INSERT INTO " + TABLE_NAME + "(date, money) VALUES ('" + inputDate + "'," + eachMoney + " )";
+                        productDatabase.execSQL(insertSql);
+                    }
                 } else if (v.getId() == R.id.btn_clean) {      // 清除
                     String deleteAllSql = "DELETE FROM " + TABLE_NAME;
                     productDatabase.execSQL(deleteAllSql);
                 }
                 etMoney.setText("");
-                etType.setText("");
+                spType.setSelection(0);
                 etDate.setText("");
                 listAllProducts();
             }
@@ -74,6 +84,12 @@ public class AccountActivity extends AppCompatActivity {
 
         btnInput.setOnClickListener(listener);
         btnClean.setOnClickListener(listener);
+
+        ArrayAdapter<String> spAdapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, types);
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spType.setAdapter(spAdapter);
+
 
     }
     private void listAllProducts(){
