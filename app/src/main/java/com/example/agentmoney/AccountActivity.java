@@ -56,9 +56,6 @@ public class AccountActivity extends AppCompatActivity {
                     String eachMoney = etMoney.getText().toString();
                     String type = etType.getText().toString();
 
-                    String productName = etDate.getText().toString();
-                    int productPrice = Integer.parseInt(etMoney.getText().toString());
-
                     String insertSql = "INSERT INTO " + TABLE_NAME + "(date, money) VALUES ('" + inputDate + "'," + eachMoney + " )";
                     productDatabase.execSQL(insertSql);
                 } else if (v.getId() == R.id.btn_clean) {      // 清除
@@ -76,6 +73,9 @@ public class AccountActivity extends AppCompatActivity {
         btnClean.setOnClickListener(listener);
 
     }
+
+    // android.R.layout.simple_list_item_2 只能插兩個值(date, money)，
+    // 要嘛自己創個adapter調整，或是用別的方法
     private void listAllProducts(){
         Cursor cursor = productDatabase.query(TABLE_NAME, new String[] {"_id", "date", "money"},
                 null, null, null, null, null, null);
