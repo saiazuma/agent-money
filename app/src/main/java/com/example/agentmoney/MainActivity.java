@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                         signIn(email, password);
                         if (loginCheck) {
                             Intent intent = new Intent();
-                            intent.setClass(MainActivity.this, homeactivity.class);
+                            intent.setClass(MainActivity.this, AccountActivity.class);
                             MainActivity.this.startActivity(intent);
                         }
                     }
