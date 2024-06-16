@@ -1,0 +1,19 @@
+Index: app/src/main/java/com/example/agentmoney/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.agentmoney;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    private EditText etAccount;\r\n    private EditText etPassword;\r\n    private Button btnLogin;\r\n    private Button btnSignup;\r\n    private FirebaseAuth mAuth;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n\r\n        etAccount = findViewById(R.id.et_account);\r\n        etPassword = findViewById(R.id.et_password);\r\n        btnLogin = findViewById(R.id.btn_login);\r\n        btnSignup = findViewById(R.id.btn_signup);\r\n\r\n        View.OnClickListener listener = new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(view.getId() == R.id.btn_login) {\r\n                    String email = etAccount.getText().toString();\r\n                    String password = etPassword.getText().toString();\r\n                    signIn(email, password);\r\n                } else if (view.getId() == R.id.btn_signup) {\r\n                    Intent intent = new Intent();\r\n                    intent.setClass(MainActivity.this, signupactivity.class);\r\n                    MainActivity.this.startActivity(intent);\r\n                }\r\n            }\r\n        };\r\n        btnLogin.setOnClickListener(listener);\r\n        btnSignup.setOnClickListener(listener);\r\n    }\r\n\r\n    private void signIn(String email, String password) {\r\n        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\r\n            @Override\r\n            public void onComplete(Task<AuthResult> task) {\r\n                if (task.isSuccessful()) {\r\n                    //登入成功，更新UI\r\n                    Intent intent = new Intent();\r\n                    intent.setClass(MainActivity.this, homeactivity.class);\r\n                    MainActivity.this.startActivity(intent);\r\n                } else {\r\n                    //登入失敗，顯示錯誤訊息\r\n                    Toast.makeText(MainActivity.this, \"登入失敗，請檢查帳號與密碼\", Toast.LENGTH_SHORT).show();\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/agentmoney/MainActivity.java b/app/src/main/java/com/example/agentmoney/MainActivity.java
+--- a/app/src/main/java/com/example/agentmoney/MainActivity.java	
++++ b/app/src/main/java/com/example/agentmoney/MainActivity.java	
+@@ -58,7 +58,7 @@
+                 if (task.isSuccessful()) {
+                     //登入成功，更新UI
+                     Intent intent = new Intent();
+-                    intent.setClass(MainActivity.this, homeactivity.class);
++                    intent.setClass(MainActivity.this, AccountActivity.class);
+                     MainActivity.this.startActivity(intent);
+                 } else {
+                     //登入失敗，顯示錯誤訊息

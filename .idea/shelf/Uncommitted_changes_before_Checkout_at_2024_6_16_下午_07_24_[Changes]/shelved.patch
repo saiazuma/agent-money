@@ -1,0 +1,132 @@
+Index: app/src/main/java/com/example/agentmoney/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.agentmoney;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.AuthResult;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\n\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n\r\n    private EditText etAccount;\r\n    private EditText etPassword;\r\n    private Button btnLogin;\r\n    private Button btnSignup;\r\n    private FirebaseAuth mAuth;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n\r\n        etAccount = findViewById(R.id.et_account);\r\n        etPassword = findViewById(R.id.et_password);\r\n        btnLogin = findViewById(R.id.btn_login);\r\n        btnSignup = findViewById(R.id.btn_signup);\r\n\r\n        View.OnClickListener listener = new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View view) {\r\n                if(view.getId() == R.id.btn_login) {\r\n                    String email = etAccount.getText().toString();\r\n                    String password = etPassword.getText().toString();\r\n                    signIn(email, password);\r\n                } else if (view.getId() == R.id.btn_signup) {\r\n                    Intent intent = new Intent();\r\n                    intent.setClass(MainActivity.this, signupactivity.class);\r\n                    MainActivity.this.startActivity(intent);\r\n                }\r\n            }\r\n        };\r\n        btnLogin.setOnClickListener(listener);\r\n        btnSignup.setOnClickListener(listener);\r\n    }\r\n\r\n    private void signIn(String email, String password) {\r\n        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {\r\n            @Override\r\n            public void onComplete(Task<AuthResult> task) {\r\n                if (task.isSuccessful()) {\r\n                    //登入成功，更新UI\r\n                    Intent intent = new Intent();\r\n                    intent.setClass(MainActivity.this, homeactivity.class);\r\n                    MainActivity.this.startActivity(intent);\r\n                } else {\r\n                    //登入失敗，顯示錯誤訊息\r\n                    Toast.makeText(MainActivity.this, \"登入失敗，請檢查帳號與密碼\", Toast.LENGTH_SHORT).show();\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/agentmoney/MainActivity.java b/app/src/main/java/com/example/agentmoney/MainActivity.java
+--- a/app/src/main/java/com/example/agentmoney/MainActivity.java	(revision 942d97fffae4037a551f06dee31455fad0a4f71a)
++++ b/app/src/main/java/com/example/agentmoney/MainActivity.java	(date 1718533248343)
+@@ -1,5 +1,6 @@
+ package com.example.agentmoney;
+ 
++import androidx.annotation.NonNull;
+ import androidx.appcompat.app.AppCompatActivity;
+ 
+ import android.content.Intent;
+@@ -22,6 +23,7 @@
+     private Button btnLogin;
+     private Button btnSignup;
+     private FirebaseAuth mAuth;
++    private boolean loginCheck;
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+@@ -32,6 +34,7 @@
+         etPassword = findViewById(R.id.et_password);
+         btnLogin = findViewById(R.id.btn_login);
+         btnSignup = findViewById(R.id.btn_signup);
++        mAuth = FirebaseAuth.getInstance();
+ 
+         View.OnClickListener listener = new View.OnClickListener() {
+             @Override
+@@ -39,7 +42,17 @@
+                 if(view.getId() == R.id.btn_login) {
+                     String email = etAccount.getText().toString();
+                     String password = etPassword.getText().toString();
+-                    signIn(email, password);
++                    if (email.isEmpty() || password.isEmpty()){
++                        Toast.makeText(MainActivity.this, "帳號或密碼為空", Toast.LENGTH_SHORT).show();
++                    } else {
++                        signIn(email, password);
++                        if (loginCheck) {
++                            Intent intent = new Intent();
++                            intent.setClass(MainActivity.this, homeactivity.class);
++                            MainActivity.this.startActivity(intent);
++                        }
++                    }
++
+                 } else if (view.getId() == R.id.btn_signup) {
+                     Intent intent = new Intent();
+                     intent.setClass(MainActivity.this, signupactivity.class);
+@@ -54,15 +67,13 @@
+     private void signIn(String email, String password) {
+         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+             @Override
+-            public void onComplete(Task<AuthResult> task) {
++            public void onComplete(@NonNull Task<AuthResult> task) {
+                 if (task.isSuccessful()) {
+-                    //登入成功，更新UI
+-                    Intent intent = new Intent();
+-                    intent.setClass(MainActivity.this, homeactivity.class);
+-                    MainActivity.this.startActivity(intent);
++                    loginCheck = true;
+                 } else {
+                     //登入失敗，顯示錯誤訊息
+                     Toast.makeText(MainActivity.this, "登入失敗，請檢查帳號與密碼", Toast.LENGTH_SHORT).show();
++                    loginCheck = false;
+                 }
+             }
+         });
+Index: .idea/deploymentTargetSelector.xml
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+deleted file mode 100644
+--- a/.idea/deploymentTargetSelector.xml	(revision 942d97fffae4037a551f06dee31455fad0a4f71a)
++++ /dev/null	(revision 942d97fffae4037a551f06dee31455fad0a4f71a)
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="deploymentTargetSelector">
+-    <selectionStates>
+-      <SelectionState runConfigName="app">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+-    </selectionStates>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id(\"com.android.application\")\r\n    id(\"com.google.gms.google-services\")\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.example.agentmoney\"\r\n    compileSdk = 34\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.example.agentmoney\"\r\n        minSdk = 28\r\n        targetSdk = 34\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            isMinifyEnabled = false\r\n            proguardFiles(getDefaultProguardFile(\"proguard-android-optimize.txt\"), \"proguard-rules.pro\")\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_1_8\r\n        targetCompatibility = JavaVersion.VERSION_1_8\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation(\"androidx.appcompat:appcompat:1.6.1\")\r\n    implementation(\"com.google.android.material:material:1.12.0\")\r\n    implementation(\"androidx.constraintlayout:constraintlayout:2.1.4\")\r\n    implementation(\"androidx.activity:activity:1.8.0\")\r\n    implementation(platform(\"com.google.firebase:firebase-bom:33.0.0\"))\r\n    implementation(\"com.google.firebase:firebase-auth-ktx:23.0.0\")\r\n    testImplementation(\"junit:junit:4.13.2\")\r\n    androidTestImplementation(\"androidx.test.ext:junit:1.1.5\")\r\n    androidTestImplementation(\"androidx.test.espresso:espresso-core:3.5.1\")\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 942d97fffae4037a551f06dee31455fad0a4f71a)
++++ b/app/build.gradle.kts	(date 1718530609875)
+@@ -37,6 +37,7 @@
+     implementation("androidx.activity:activity:1.8.0")
+     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+     implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
++    implementation("com.google.firebase:firebase-auth:23.0.0")
+     testImplementation("junit:junit:4.13.2")
+     androidTestImplementation("androidx.test.ext:junit:1.1.5")
+     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+Index: app/src/main/res/layout/activity_homeactivity.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:id=\"@+id/main\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    tools:context=\".homeactivity\">\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_homeactivity.xml b/app/src/main/res/layout/activity_homeactivity.xml
+--- a/app/src/main/res/layout/activity_homeactivity.xml	(revision 942d97fffae4037a551f06dee31455fad0a4f71a)
++++ b/app/src/main/res/layout/activity_homeactivity.xml	(date 1718531499734)
+@@ -7,4 +7,13 @@
+     android:layout_height="match_parent"
+     tools:context=".homeactivity">
+ 
++    <TextView
++        android:id="@+id/textView"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:layout_marginTop="16dp"
++        android:text="test"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="parent" />
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
