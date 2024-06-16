@@ -67,8 +67,10 @@ public class AccountActivity extends AppCompatActivity {
 
                         String productName = etDate.getText().toString();
                         int productPrice = Integer.parseInt(etMoney.getText().toString());
+                        // 直接將類型附加在日期的後面
+                        inputDate = inputDate + "#" + type;
 
-                        String insertSql = "INSERT INTO " + TABLE_NAME + "(date, money) VALUES ('" + inputDate + "'," + eachMoney + " )";
+                        String insertSql = "INSERT INTO " + TABLE_NAME + "(date, money) VALUES ('" + inputDate + "'," + eachMoney + ")";
                         productDatabase.execSQL(insertSql);
                     }
                 } else if (v.getId() == R.id.btn_clean) {      // 清除
