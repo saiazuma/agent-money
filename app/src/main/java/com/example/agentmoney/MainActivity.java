@@ -1,5 +1,6 @@
 package com.example.agentmoney;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnLogin;
     private Button btnSignup;
     private FirebaseAuth mAuth;
+    private boolean loginCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
         btnSignup = findViewById(R.id.btn_signup);
+        mAuth = FirebaseAuth.getInstance();
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -39,7 +42,17 @@ public class MainActivity extends AppCompatActivity {
                 if(view.getId() == R.id.btn_login) {
                     String email = etAccount.getText().toString();
                     String password = etPassword.getText().toString();
-                    signIn(email, password);
+                    if (email.isEmpty() || password.isEmpty()){
+                        Toast.makeText(MainActivity.this, "帳號或密碼為空", Toast.LENGTH_SHORT).show();
+                    } else {
+                        signIn(email, password);
+                        if (loginCheck) {
+                            Intent intent = new Intent();
+                            intent.setClass(MainActivity.this, homeactivity.class);
+                            MainActivity.this.startActivity(intent);
+                        }
+                    }
+
                 } else if (view.getId() == R.id.btn_signup) {
                     Intent intent = new Intent();
                     intent.setClass(MainActivity.this, signupactivity.class);
@@ -54,15 +67,13 @@ public class MainActivity extends AppCompatActivity {
     private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
-            public void onComplete(Task<AuthResult> task) {
+            public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    //登入成功，更新UI
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this, homeactivity.class);
-                    MainActivity.this.startActivity(intent);
+                    loginCheck = true;
                 } else {
                     //登入失敗，顯示錯誤訊息
                     Toast.makeText(MainActivity.this, "登入失敗，請檢查帳號與密碼", Toast.LENGTH_SHORT).show();
+                    loginCheck = false;
                 }
             }
         });
